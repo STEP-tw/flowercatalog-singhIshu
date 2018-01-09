@@ -1,0 +1,58 @@
+h1{
+  text-align: center;
+  font-size: 40px;
+}
+
+h2{
+  text-align: center;
+  padding-top: 1px;
+  margin-top: 0px;
+  color: rgb(221, 160, 24);
+}
+
+h3{
+  font-size: 30px;
+}
+
+
+hr{
+  margin:0px 50px 10px;
+}
+
+p{
+  text-align: right;
+  font-size: 18px;
+  font-style: normal;
+}
+
+div{
+  float: left;
+}
+
+img{
+  margin-top: 10px;
+  margin-left:50px;
+  align-self: center;
+}
+
+th{
+  text-align: center;
+}
+
+th,td{
+   padding:5px;
+}
+
+
+#comment{
+  width: 400px;
+  font-size: 15px;
+  size:70px;
+  height: 150px;
+}
+
+#freshFlowers{
+  margin-left: 50px;
+  height: 600px;
+  width: 800px;
+}

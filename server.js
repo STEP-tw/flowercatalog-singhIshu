@@ -3,8 +3,15 @@ const http = require('http');
 const WebApp = require('./webapp');
 const updateGuestPage = require('./storeFeedBack.js').updateGuestPage;
 const storeFeedBack = require('./storeFeedBack.js').storeFeedBack;
+const makeFeedbackTable = require('./storeFeedBack.js').makeFeedbackTable;
 let registered_users = [{userName:'bhanutv',name:'Bhanu Teja Verma'},{userName:'harshab',name:'Harsha Vardhana'}];
 let toS = o=>JSON.stringify(o,null,2);
+
+const storeComment = function(request) {
+  request.on("data", function(text) {
+    storeFeedBack(text.toString());
+  });
+}
 
 let logRequest = (req,res)=>{
   let text = ['--------------------------',
@@ -14,7 +21,6 @@ let logRequest = (req,res)=>{
     `BODY=> ${toS(req.body)}`,''].join('\n');
   fs.appendFile('request.log',text,()=>{});
 }
-
 
 let loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
@@ -39,24 +45,23 @@ app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
 app.get('/',(req,res)=>{
   res.redirect('/index.html');
-  res.end();
 });
 
-app.get("/feedback",(req,res)=>{
-  storeComment(request);
-  res.statusCode = 302;
-  response.setHeader('Location', "guestPage.html");
+app.get('/feedback',(req,res)=>{
+  storeComment(req);
+  res.redirect("/guestPage.html");
 });
 
 app.get("/guestPage.html",(req,res)=>{
   let displayContents = updateGuestPage();
+  console.log(displayContents);
   res.write(displayContents);
 });
 
 app.get('/login',(req,res)=>{
   res.setHeader('Content-type','text/html');
   if(req.cookies.logInFailed) res.write('<p>logIn Failed</p>');
-  res.write('<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>');
+  res.write('<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>'+makeFeedbackTable());
   res.end();
 });
 

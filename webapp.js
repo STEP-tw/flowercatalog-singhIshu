@@ -64,6 +64,7 @@ let invoke = function(req,res){
   }
   handler(req,res);
 }
+
 const initialize = function(){
   this._handlers = {GET:{},POST:{}};
   this._preprocess = [];
@@ -96,7 +97,7 @@ const main = function(req,res){
       middleware(req,res);
     });
     if(res.finished) return;
-    console.log(this);
+    console.log(req.url);
     invoke.call(this,req,res);
   });
   // readFileContents(res,`./public${req.url}`)

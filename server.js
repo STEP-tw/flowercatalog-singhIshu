@@ -9,6 +9,7 @@ let toS = o=>JSON.stringify(o,null,2);
 
 const storeComment = function(request) {
   request.on("data", function(text) {
+    console.log("working");
     storeFeedBack(text.toString());
   });
 }
@@ -47,7 +48,7 @@ app.get('/',(req,res)=>{
   res.redirect('/index.html');
 });
 
-app.get('/feedback',(req,res)=>{
+app.post('/feedback',(req,res)=>{
   storeComment(req);
   res.redirect("/guestPage.html");
 });
@@ -56,23 +57,18 @@ app.get("/guestPage.html",(req,res)=>{
   let displayContents = updateGuestPage();
   console.log(displayContents);
   res.write(displayContents);
+  res.end();
 });
 
 app.get('/login',(req,res)=>{
   res.setHeader('Content-type','text/html');
-  if(req.cookies.logInFailed) res.write('<p>logIn Failed</p>');
-  res.write('<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>'+makeFeedbackTable());
+  res.write(`<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>${makeFeedbackTable()}`);
   res.end();
 });
 
 app.post('/login',(req,res)=>{
-  let user = registered_users.find(u=>u.userName==req.body.userName);
-  if(!user) {
-    res.setHeader('Set-Cookie',`logInFailed=true`);
-    res.redirect('/guestPage.html');
-    return;
-  }
   let sessionid = new Date().getTime();
+  let user = req.body.userName;
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
   res.redirect('/guestPage.html');

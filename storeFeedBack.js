@@ -12,8 +12,9 @@ const makeFeedbackTable = function() {
     return `<tr><td>${date}</td><td>${feedback.name}</td><td>${feedback.comment}</td></tr><br>`
   })
   table = table.join("");
-  return `<table><tr></tr>${table}<table>`;
+  return `<table><tr></tr>${table}</table>`;
 }
+
 
 const storeFeedBack = function(url) {
   let userInfo = arrangeUserFeedBack(url);

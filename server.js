@@ -53,7 +53,7 @@ app.get("/guestPage.html",(req,res)=>{
   }
 });
 
-app.get("/guestPage",(req,res)=>{
+app.get("/commentPage",(req,res)=>{
   if(req.user){
     res.redirect("/guestPage.html");
     return;

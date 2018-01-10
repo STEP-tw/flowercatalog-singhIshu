@@ -16,4 +16,4 @@ Make a seperate file for the comment form as was made for the login form.
 When the user clicks the guestbook link show him the appended data of guestbook page login button and previous comments.
 The redirect user to the login page that will only have the form.
 After login display the user with the guestpage with his name and comment form.
- 
+If the user is not a registered user then display Invalid user.

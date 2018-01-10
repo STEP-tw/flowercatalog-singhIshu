@@ -1,0 +1,19 @@
+#Objective
+
+The user should be redirected to the guestbook page that will have the login button
+and the previous comments.
+
+After logging in the user should get the guestbook having the previous comments and the comment form.
+
+The guestbook page should have a logout form so that the user can logout.
+
+If the user is not a registered user the page should display Invalid user.
+
+
+#Steps to follow
+
+Make a seperate file for the comment form as was made for the login form.
+When the user clicks the guestbook link show him the appended data of guestbook page login button and previous comments.
+The redirect user to the login page that will only have the form.
+After login display the user with the guestpage with his name and comment form.
+ 

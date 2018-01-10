@@ -4,15 +4,10 @@ const WebApp = require('./webapp');
 const updateGuestPage = require('./storeFeedBack.js').updateGuestPage;
 const storeFeedBack = require('./storeFeedBack.js').storeFeedBack;
 const makeFeedbackTable = require('./storeFeedBack.js').makeFeedbackTable;
-let registered_users = [{userName:'bhanutv',name:'Bhanu Teja Verma'},{userName:'harshab',name:'Harsha Vardhana'}];
+let registered_users = [{userName:'bhanutv',name:'Bhanu Teja Verma'},{userName:'ishusi',name:'Ishu Singh'}];
 let toS = o=>JSON.stringify(o,null,2);
 
-const storeComment = function(request) {
-  request.on("data", function(text) {
-    console.log("working");
-    storeFeedBack(text.toString());
-  });
-}
+
 
 let logRequest = (req,res)=>{
   let text = ['--------------------------',
@@ -31,44 +26,50 @@ let loadUser = (req,res)=>{
   }
 };
 
-let redirectLoggedInUserToHome = (req,res)=>{
-  if(req.urlIsOneOf(['/','/login']) && req.user) res.redirect('/guestPage.html');
-}
 let redirectLoggedOutUserToLogin = (req,res)=>{
-  if(req.urlIsOneOf(['/home','/logout']) && !req.user) res.redirect('/login');
+  if(req.urlIsOneOf(['/logout']) && !req.user) res.redirect('/index.html');
 }
 
 
 let app = WebApp.create();
 app.use(logRequest);
 app.use(loadUser);
-app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
 app.get('/',(req,res)=>{
   res.redirect('/index.html');
 });
 
 app.post('/feedback',(req,res)=>{
-  storeComment(req);
+  storeFeedBack(req.body);
   res.redirect("/guestPage.html");
 });
 
 app.get("/guestPage.html",(req,res)=>{
-  let displayContents = updateGuestPage();
-  console.log(displayContents);
-  res.write(displayContents);
-  res.end();
+  if (req.user) {
+    let displayContents = updateGuestPage().replace("username",req.user.name);
+    res.write(displayContents);
+    res.end();
+  }
 });
 
 app.get('/login',(req,res)=>{
+  if(req.user){
+    res.redirect("/guestPage.html");
+    return;
+  }
   res.setHeader('Content-type','text/html');
   res.write(`<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>${makeFeedbackTable()}`);
   res.end();
 });
 
 app.post('/login',(req,res)=>{
+  let user = registered_users.find(u=>u.userName==req.body.userName);
+  if(!user) {
+    res.setHeader('Set-Cookie',`logInFailed=true`);
+    res.redirect('/index.html');
+    return;
+  }
   let sessionid = new Date().getTime();
-  let user = req.body.userName;
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
   res.redirect('/guestPage.html');
@@ -76,7 +77,6 @@ app.post('/login',(req,res)=>{
 
 
 app.get('/logout',(req,res)=>{
-  res.setHeader('Set-Cookie',[`loginFailed=false,Expires=${new Date(1).toUTCString()}`,`sessionid=0,Expires=${new Date(1).toUTCString()}`]);
   delete req.user.sessionid;
   res.redirect('/login');
 });

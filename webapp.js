@@ -21,8 +21,10 @@ const getContentType = function(filename) {
 }
 
 const readFileContents = function(response,fileName) {
+  fileName = `./public${fileName}`;
   fs.readFile(fileName,(err,data)=>{
     if (err) {
+      response.statusCode
       response.write("File Not Found");
       response.end();
       return;
@@ -57,12 +59,10 @@ const parseCookies = text=> {
 
 let invoke = function(req,res){
   let handler = this._handlers[req.method][req.url];
-  if(!handler){
-    req.url = `./public${req.url}`;
-    readFileContents(res,req.url);
-    return;
+  if(handler){
+    handler(req,res);
   }
-  handler(req,res);
+  return;
 }
 
 const initialize = function(){
@@ -81,6 +81,7 @@ const use = function(handler){
 let urlIsOneOf = function(urls){
   return urls.includes(this.url);
 }
+
 const main = function(req,res){
   res.redirect = redirect.bind(res);
   req.urlIsOneOf = urlIsOneOf.bind(req);
@@ -98,8 +99,9 @@ const main = function(req,res){
     if(res.finished) return;
     console.log(req.url);
     invoke.call(this,req,res);
+    if (res.finished) return;
+    readFileContents(res,req.url);
   });
-  // readFileContents(res,`./public${req.url}`)
 };
 
 let create = ()=>{

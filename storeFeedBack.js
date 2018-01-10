@@ -2,10 +2,6 @@ const fs = require('fs');
 const feedbacks = require('./feedbacks.json');
 const querystring = require('querystring');
 
-const arrangeUserFeedBack = function(information) {
-  return querystring.parse(information);
-}
-
 const makeFeedbackTable = function() {
   let date = new Date().toLocaleString();
   let table = feedbacks.map(function(feedback) {
@@ -17,8 +13,7 @@ const makeFeedbackTable = function() {
 
 
 const storeFeedBack = function(url) {
-  let userInfo = arrangeUserFeedBack(url);
-  feedbacks.unshift(userInfo);
+  feedbacks.unshift(url);
   console.log("storing feedback");
   let updateDatabase = JSON.stringify(feedbacks);
   fs.writeFile("./feedbacks.json", updateDatabase,function (err) {

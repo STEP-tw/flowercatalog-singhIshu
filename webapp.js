@@ -25,7 +25,7 @@ const readFileContents = function(response,fileName) {
   fs.readFile(fileName,(err,data)=>{
     if (err) {
       response.statusCode
-      response.write("File Not Found");
+      response.write("File Not Found"+fileName);
       response.end();
       return;
     }

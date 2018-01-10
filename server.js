@@ -3,7 +3,7 @@ const http = require('http');
 const WebApp = require('./webapp');
 const updateGuestPage = require('./storeFeedBack.js').updateGuestPage;
 const storeFeedBack = require('./storeFeedBack.js').storeFeedBack;
-const makeFeedbackTable = require('./storeFeedBack.js').makeFeedbackTable;
+const displayCommentPage = require('./storeFeedBack.js').displayCommentPage;
 let registered_users = [{userName:'bhanutv',name:'Bhanu Teja Verma'},{userName:'ishusi',name:'Ishu Singh'}];
 let toS = o=>JSON.stringify(o,null,2);
 
@@ -49,16 +49,23 @@ app.get("/guestPage.html",(req,res)=>{
     let displayContents = updateGuestPage().replace("username",req.user.name);
     res.write(displayContents);
     res.end();
+    return;
   }
 });
 
-app.get('/login',(req,res)=>{
+app.get("/guestPage",(req,res)=>{
   if(req.user){
     res.redirect("/guestPage.html");
     return;
   }
   res.setHeader('Content-type','text/html');
-  res.write(`<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>${makeFeedbackTable()}`);
+  res.write(displayCommentPage());
+  res.end();
+})
+
+app.get('/login',(req,res)=>{
+  res.setHeader('Content-type','text/html');
+  res.write(`<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>`);
   res.end();
 });
 

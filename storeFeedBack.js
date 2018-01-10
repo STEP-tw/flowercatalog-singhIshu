@@ -8,7 +8,13 @@ const makeFeedbackTable = function() {
     return `<tr><td>${date}</td><td>${feedback.name}</td><td>${feedback.comment}</td></tr><br>`
   })
   table = table.join("");
-  return `<table><tr></tr>${table}</table>`;
+  return `<tr></tr>${table}`;
+}
+
+const displayCommentPage = function() {
+  let commentPageContents = fs.readFileSync("public/commentPage.html","utf8");
+  let tableHead = `<tr><th>Date</th><th>Name</th><th>Comment</th></tr>`;
+  return `${commentPageContents}<table>${tableHead}${makeFeedbackTable()}</table>`;
 }
 
 
@@ -28,6 +34,7 @@ const updateGuestPage = function() {
   return guestPage;
 }
 
+exports.displayCommentPage = displayCommentPage;
 exports.makeFeedbackTable = makeFeedbackTable;
 exports.updateGuestPage = updateGuestPage;
 exports.storeFeedBack = storeFeedBack;

@@ -2,11 +2,18 @@ const fs = require('fs');
 const feedbacks = require('./feedbacks.json');
 const querystring = require('querystring');
 
+
+const makeFeedbackRow = function(feedback) {
+  let date = new Date().toLocaleString();
+  let name = `<td>${feedback.name}</td>`;
+  let comment = `<td>${feedback.comment}</td>`;
+  return `<tr><td>${date}</td>${name}${comment}</tr>`;
+}
+
+
 const makeFeedbackTable = function() {
   let date = new Date().toLocaleString();
-  let table = feedbacks.map(function(feedback) {
-    return `<tr><td>${date}</td><td>${feedback.name}</td><td>${feedback.comment}</td></tr><br>`
-  })
+  let table = feedbacks.map(makeFeedbackRow);
   table = table.join("");
   return `<tr></tr>${table}`;
 }
